@@ -1,0 +1,8 @@
+base: fish4terrisa-MSDSM/osv-base
+
+cmdline: /rvvm.so
+
+build: make USE_FB=0 USE_NET=1 USE_SPINLOCK_DEBUG=0 USE_TAP_LINUX=0 USE_OSV=1 CC=gcc-9
+
+files:
+  /rvvm.so: release.linux.x86_64/rvvm_x86_64.so

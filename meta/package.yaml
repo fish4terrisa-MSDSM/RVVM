@@ -1,0 +1,5 @@
+name: osv-rvvm
+title: RVVM
+author: fish4terrisa-MSDSM (fish4terrisa@fishinix.eu.org)
+#require:
+# - osv.cli

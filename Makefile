@@ -28,7 +28,7 @@ HOST_UNAME := $(firstword $(shell uname -s 2>/dev/null) POSIX)
 HOST_CPUS := $(firstword $(shell nproc 2>/dev/null) $(shell sysctl -n hw.ncpu 2>/dev/null) 1)
 HOST_ARCH := $(firstword $(shell uname -m 2>/dev/null) Unknown)
 endif
-
+USE_OSV ?= 0
 # Some eye-candy stuff
 SPACE   :=
 ifneq (,$(TERM))
@@ -159,13 +159,15 @@ override LDFLAGS += -L/usr/X11R6/lib
 endif
 
 endif
-
+ifneq ($(USE_OSV),1)
 ifneq (,$(findstring main, $(shell $(CC) $(CFLAGS) $(LDFLAGS) -latomic 2>&1)))
 override LDFLAGS += -latomic
 else
 override CFLAGS += -DNO_LIBATOMIC
 endif
-
+else
+override CFLAGS += -DNO_LIBATOMIC
+endif
 endif
 
 # Detect compiler type, version
@@ -296,7 +298,10 @@ USE_SPINLOCK_DEBUG ?= 1
 ifeq ($(USE_RV64),1)
 override CFLAGS += -DUSE_RV64
 endif
-
+ifeq ($(USE_OSV),1)
+override LDFLAGS += -shared -fPIC
+override BINARY = $(BUILDDIR)/$(NAME)_$(ARCH).so
+endif
 ifeq ($(USE_FPU),1)
 # Needed for floating-point functions like fetestexcept/feraiseexcept
 override LDFLAGS += -lm
